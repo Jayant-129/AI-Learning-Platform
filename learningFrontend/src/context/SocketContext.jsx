@@ -5,7 +5,8 @@ import logger from '../utils/logger';
 
 const SocketContext = createContext(null);
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5001';
+// Use the same host the app is served from — Nginx proxies /socket.io/ to Node.js
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || window.location.origin;
 
 export function SocketProvider({ children }) {
   const { user, token, isAuthenticated } = useAuth();

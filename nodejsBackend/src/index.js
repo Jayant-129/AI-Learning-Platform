@@ -19,10 +19,14 @@ const JWT_SECRET = process.env.JWT_SECRET || 'learner_platform_jwt_secret_key_20
 const app = express();
 const server = http.createServer(app);
 
+const CORS_ORIGINS = process.env.CORS_ALLOWED_ORIGINS
+  ? process.env.CORS_ALLOWED_ORIGINS.split(',')
+  : ['http://localhost:3000', 'http://localhost:5173'];
+
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:5173'],
+  origin: CORS_ORIGINS,
   credentials: true,
 }));
 app.use(express.json());
@@ -35,7 +39,7 @@ app.use(morgan('combined', {
 // ---- Socket.IO ----
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:3000', 'http://localhost:5173'],
+    origin: CORS_ORIGINS,
     methods: ['GET', 'POST'],
     credentials: true,
   },

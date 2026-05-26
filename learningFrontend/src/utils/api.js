@@ -1,6 +1,7 @@
 import axios from 'axios';
 import logger from './logger';
 
+// Empty baseURL means all requests use relative URLs — Nginx proxies /api/* to Spring Boot
 const API_URL = import.meta.env.VITE_API_URL || '';
 
 const api = axios.create({
@@ -130,7 +131,8 @@ export const profileAPI = {
 };
 
 // ---- Analytics (Python ML Service) ----
-const ML_URL = 'http://localhost:8000';
+// Python ML is proxied through Spring Boot's /api/ml/* — no direct browser connection needed
+const ML_URL = import.meta.env.VITE_ML_URL || '';
 export const analyticsAPI = {
   topLearners: (limit = 10) => api.get(`${ML_URL}/analytics/top-learners?limit=${limit}`),
   weakLearners: (threshold = 6.5) => api.get(`${ML_URL}/analytics/weak-learners?gpa_threshold=${threshold}`),

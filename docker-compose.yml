@@ -33,6 +33,7 @@ services:
       JWT_SECRET: learner_platform_jwt_secret_key_2024_super_secure
       ML_SERVICE_URL: http://python-ml:8000
       NOTIFICATION_SERVICE_URL: http://node-notifications:5000
+      CORS_ALLOWED_ORIGINS: http://localhost:3000
     depends_on:
       postgres:
         condition: service_healthy
@@ -42,15 +43,14 @@ services:
       - learner-net
 
   react-frontend:
-    build: ./learningFrontend
     container_name: learner-react-frontend
     ports:
       - '3000:80'
-    environment:
-      VITE_API_URL: http://localhost:8080
-      VITE_SOCKET_URL: http://localhost:5001
+    build:
+      context: ./learningFrontend
     depends_on:
       - spring-backend
+      - node-notifications
     networks:
       - learner-net
 
@@ -76,6 +76,7 @@ services:
       PORT: 5000
       SPRING_BACKEND_URL: http://spring-backend:8080
       JWT_SECRET: learner_platform_jwt_secret_key_2024_super_secure
+      CORS_ALLOWED_ORIGINS: http://localhost:3000
     depends_on:
       - spring-backend
     networks:
